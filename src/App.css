@@ -1,0 +1,514 @@
+/* Layout geral: largura de celular, centralizado no desktop */
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--fundo);
+  position: relative;
+}
+
+.tela {
+  padding-bottom: 96px; /* espaço para o menu do rodapé */
+}
+
+/* ---------- Imagens / capas ---------- */
+.imagem {
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.imagem .emoji {
+  font-size: 2.2rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+.imagem.mini {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 14px;
+}
+.imagem.thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 14px;
+  flex-shrink: 0;
+}
+.imagem.capa {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 14px;
+}
+.imagem.capa .emoji {
+  font-size: 3rem;
+}
+.imagem.capa-grande {
+  width: 100%;
+  height: 240px;
+  border-radius: 0 0 28px 28px;
+}
+.imagem.capa-grande .emoji {
+  font-size: 5rem;
+}
+
+/* ---------- Início: destaque ---------- */
+.hero {
+  margin: 12px 16px 0;
+  border-radius: 24px;
+  padding: 24px 20px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.1) 60%);
+}
+.hero-emoji {
+  position: absolute;
+  top: 24px;
+  right: 20px;
+  font-size: 6rem;
+  opacity: 0.9;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+}
+.hero-texto {
+  position: relative;
+  z-index: 1;
+}
+.marca {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--amarelo);
+  font-weight: 700;
+}
+.hero h1 {
+  margin: 0 0 6px;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.hero p {
+  margin: 0 0 16px;
+  color: var(--texto-suave);
+  font-size: 0.95rem;
+}
+.botao-destaque {
+  background: var(--amarelo);
+  color: #3b2314;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-weight: 700;
+  cursor: pointer;
+  align-self: flex-start;
+}
+.botao-destaque:hover {
+  filter: brightness(1.05);
+}
+
+/* ---------- Seções ---------- */
+.secao {
+  margin-top: 28px;
+}
+.secao-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 16px;
+  margin-bottom: 12px;
+}
+.secao h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.link {
+  background: none;
+  border: none;
+  color: var(--rosa);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.carrossel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 0 16px 8px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.carrossel::-webkit-scrollbar {
+  display: none;
+}
+.carrossel > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* Ações do cabeçalho da seção: link + setas do carrossel */
+.secao-acoes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.secao-acoes .link {
+  margin-right: 4px;
+}
+.seta {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--borda);
+  background: var(--card);
+  color: var(--texto);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 2px;
+}
+.seta:hover {
+  background: var(--rosa);
+  border-color: var(--rosa);
+  color: #fff;
+}
+
+.card-podcast {
+  width: 200px;
+  background: linear-gradient(135deg, var(--roxo), var(--rosa-escuro));
+  border-radius: var(--raio);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+}
+.card-podcast .play {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+.card-podcast strong {
+  font-size: 0.95rem;
+}
+.card-podcast span {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.card-mini {
+  width: 120px;
+  cursor: pointer;
+}
+.card-mini strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.85rem;
+}
+
+/* ---------- Listas ---------- */
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px;
+}
+.card-lista {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 12px;
+  cursor: pointer;
+}
+.card-lista strong {
+  display: block;
+  margin-bottom: 4px;
+}
+.card-lista p {
+  margin: 0 0 4px;
+  color: var(--texto-suave);
+  font-size: 0.88rem;
+}
+.card-lista small {
+  color: var(--amarelo);
+}
+
+/* ---------- Cabeçalho das telas internas ---------- */
+.cabecalho {
+  padding: 24px 16px 16px;
+}
+.cabecalho h1 {
+  margin: 0 0 12px;
+  font-size: 1.6rem;
+}
+.cabecalho p {
+  margin: -6px 0 0;
+  color: var(--texto-suave);
+}
+.cabecalho input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--borda);
+  background: var(--card);
+  color: var(--texto);
+  font: inherit;
+}
+.cabecalho input:focus {
+  outline: 2px solid var(--rosa);
+}
+
+.segmentos {
+  display: flex;
+  background: var(--card);
+  border-radius: 999px;
+  padding: 4px;
+}
+.segmentos button {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--texto-suave);
+}
+.segmentos button.ativo {
+  background: var(--rosa);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ---------- Grade de receitas ---------- */
+.grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 0 16px;
+}
+.card-grade {
+  cursor: pointer;
+}
+.card-grade strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
+.card-grade small {
+  color: var(--amarelo);
+  font-size: 0.78rem;
+}
+.vazio {
+  grid-column: 1 / -1;
+  color: var(--texto-suave);
+  text-align: center;
+  padding: 32px 0;
+}
+
+/* ---------- Receita (detalhe) ---------- */
+.voltar {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.conteudo {
+  padding: 20px 16px;
+}
+.conteudo h1 {
+  margin: 0 0 6px;
+  font-size: 1.6rem;
+}
+.conteudo h2 {
+  font-size: 1.1rem;
+  margin: 24px 0 10px;
+  color: var(--rosa);
+}
+.resumo {
+  margin: 0 0 12px;
+  color: var(--texto-suave);
+}
+.infos {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.infos span {
+  background: var(--card);
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+}
+.ingredientes {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.7;
+}
+.passos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.passos li {
+  display: flex;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  padding: 12px;
+  cursor: pointer;
+  line-height: 1.5;
+}
+.passos li.feito {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+.passos .numero {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--rosa);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dica {
+  margin-top: 24px;
+  background: rgba(255, 209, 102, 0.12);
+  border: 1px solid rgba(255, 209, 102, 0.4);
+  border-radius: 14px;
+  padding: 14px;
+}
+.dica p {
+  margin: 6px 0 0;
+  color: var(--texto-suave);
+}
+
+/* ---------- Podcasts ---------- */
+.card-episodio {
+  display: flex;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 14px;
+}
+.card-episodio .play {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--roxo), var(--rosa-escuro));
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.card-episodio .play.ativo {
+  background: var(--amarelo);
+  color: #3b2314;
+}
+.card-episodio strong {
+  display: block;
+  margin-bottom: 4px;
+}
+.card-episodio p {
+  margin: 0 0 4px;
+  color: var(--texto-suave);
+  font-size: 0.88rem;
+}
+.card-episodio small {
+  color: var(--amarelo);
+}
+.player {
+  margin-top: 10px;
+}
+.player audio {
+  width: 100%;
+}
+.aviso {
+  color: var(--texto-suave) !important;
+  font-style: italic;
+}
+
+/* ---------- Menu do rodapé ---------- */
+.rodape {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: var(--fundo);
+  border-top: 1px solid var(--borda);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  z-index: 10;
+}
+.rodape button {
+  flex: 1;
+  border: none;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0 6px;
+  cursor: pointer;
+  color: var(--texto-suave);
+  transition: color 0.15s ease;
+}
+.rodape .icone {
+  display: flex;
+}
+.rodape .rotulo {
+  font-size: 0.66rem;
+  letter-spacing: 0.2px;
+}
+.rodape button.ativo {
+  color: var(--texto);
+}
+.rodape button.ativo .rotulo {
+  font-weight: 600;
+}

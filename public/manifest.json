@@ -1,0 +1,11 @@
+{
+  "name": "Brigadeiro Bliss",
+  "short_name": "Brigadeiro",
+  "description": "Receitas, guias e podcasts de brigadeiro gourmet.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a0f0a",
+  "theme_color": "#1a0f0a",
+  "lang": "pt-BR",
+  "icons": []
+}
