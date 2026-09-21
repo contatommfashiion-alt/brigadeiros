@@ -48,6 +48,40 @@ const ICONES = {
       <path d="M16.5 9.5 21 6.5v11l-4.5-3" />
     </Icone>
   ),
+  dica: (
+    <Icone>
+      <path d="M9 18h6" />
+      <path d="M10 21h4" />
+      <path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" />
+    </Icone>
+  ),
+  conservacao: (
+    <Icone>
+      <path d="M3 8.5 12 4l9 4.5v8L12 21l-9-4.5z" />
+      <path d="M3 8.5 12 13l9-4.5" />
+      <path d="M12 13v8" />
+    </Icone>
+  ),
+  atencao: (
+    <Icone>
+      <path d="M12 4 2.5 20h19z" />
+      <path d="M12 10v4.5" />
+      <path d="M12 17.5v.01" />
+    </Icone>
+  ),
+  variacao: (
+    <Icone>
+      <path d="M20 11a8 8 0 0 0-14.5-4.5" />
+      <path d="M4 4v4h4" />
+      <path d="M4 13a8 8 0 0 0 14.5 4.5" />
+      <path d="M20 20v-4h-4" />
+    </Icone>
+  ),
+  nota: (
+    <Icone>
+      <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />
+    </Icone>
+  ),
 }
 
 const ABAS = [
@@ -107,27 +141,30 @@ function SecaoCarrossel({ titulo, acao, onAcao, children }) {
 }
 
 function Inicio({ irPara, abrirReceita }) {
-  const destaque = receitas[0]
   return (
     <div className="tela">
-      <section className="hero" style={{ background: destaque.cor }}>
-        <span className="hero-emoji" aria-hidden="true">
-          🍫
-        </span>
+      <section className="hero">
         <div className="hero-texto">
-          <p className="marca">🍬 Brigadeiro Bliss</p>
           <h1>Brigadeiros Gourmet</h1>
           <p>Descubra receitas, recheios e coberturas para encantar.</p>
           <button className="botao-destaque" onClick={() => irPara('receitas')}>
             Ver Receitas
+            <Icone>
+              <path d="M5 12h14" />
+              <path d="m13 6 6 6-6 6" />
+            </Icone>
           </button>
         </div>
       </section>
 
-      <SecaoCarrossel titulo="🎧 Podcasts" acao="Ver todos" onAcao={() => irPara('podcasts')}>
+      <SecaoCarrossel titulo="Podcasts" acao="Ver todos" onAcao={() => irPara('podcasts')}>
         {podcasts.map((p) => (
           <article className="card-podcast" key={p.id} onClick={() => irPara('podcasts')}>
-            <div className="play">▶</div>
+            <div className="play">
+              <Icone>
+                <path d="M7 4.5v15l12-7.5z" />
+              </Icone>
+            </div>
             <strong>{p.titulo}</strong>
             <span>{p.duracao}</span>
           </article>
@@ -204,7 +241,9 @@ function Receitas({ abrirReceita }) {
 
 function Receita({ receita, voltar }) {
   const [feitos, setFeitos] = useState({})
-  const marcar = (i) => setFeitos((f) => ({ ...f, [i]: !f[i] }))
+  const marcar = (chave) => setFeitos((f) => ({ ...f, [chave]: !f[chave] }))
+  // Aceita "passos" (um único bloco) ou "preparos" (vários blocos com título).
+  const preparos = receita.preparos ?? [{ titulo: 'Modo de preparo', passos: receita.passos }]
   return (
     <div className="tela">
       <CardImagem item={receita} className="capa-grande">
@@ -214,11 +253,11 @@ function Receita({ receita, voltar }) {
       </CardImagem>
       <div className="conteudo">
         <h1>{receita.nome}</h1>
-        <p className="resumo">{receita.resumo}</p>
+        <p className="resumo">{receita.resumo ?? receita.descricao}</p>
         <div className="infos">
           <span>⏱ {receita.tempo}</span>
           <span>🍬 {receita.rendimento}</span>
-          <span>📊 {receita.dificuldade}</span>
+          {receita.dificuldade && <span>📊 {receita.dificuldade}</span>}
         </div>
 
         <h2>Ingredientes</h2>
@@ -228,24 +267,87 @@ function Receita({ receita, voltar }) {
           ))}
         </ul>
 
-        <h2>Modo de preparo</h2>
-        <ol className="passos">
-          {receita.passos.map((passo, i) => (
-            <li
-              key={i}
-              className={feitos[i] ? 'feito' : ''}
-              onClick={() => marcar(i)}
-            >
-              <span className="numero">{i + 1}</span>
-              <span>{passo}</span>
-            </li>
-          ))}
-        </ol>
+        {receita.paraEnrolar && (
+          <>
+            <h3>Para enrolar</h3>
+            <ul className="ingredientes">
+              {receita.paraEnrolar.map((ing, i) => (
+                <li key={i}>{ing}</li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {preparos.map((bloco, b) => (
+          <div key={b}>
+            <h2>{bloco.titulo}</h2>
+            <ol className="passos">
+              {bloco.passos.map((passo, i) => {
+                const chave = `${b}-${i}`
+                return (
+                  <li
+                    key={chave}
+                    className={feitos[chave] ? 'feito' : ''}
+                    onClick={() => marcar(chave)}
+                  >
+                    <span className="numero">{i + 1}</span>
+                    <span>{passo}</span>
+                  </li>
+                )
+              })}
+            </ol>
+          </div>
+        ))}
+
+        {receita.comoUsar && (
+          <>
+            <h2>Como usar</h2>
+            <p className="texto">{receita.comoUsar}</p>
+          </>
+        )}
+
+        {receita.variacao && (
+          <div className="dica variacao">
+            <strong>
+              {ICONES.variacao} {receita.variacao.titulo}
+            </strong>
+            <p>{receita.variacao.texto}</p>
+          </div>
+        )}
 
         {receita.dicas && (
           <div className="dica">
-            <strong>💡 Dica</strong>
+            <strong>
+              {ICONES.dica} Dica
+            </strong>
             <p>{receita.dicas}</p>
+          </div>
+        )}
+
+        {receita.nota && (
+          <div className="dica nota">
+            <strong>
+              {ICONES.nota} {receita.nota.titulo}
+            </strong>
+            <p>{receita.nota.texto}</p>
+          </div>
+        )}
+
+        {receita.atencao && (
+          <div className="dica atencao">
+            <strong>
+              {ICONES.atencao} Atenção
+            </strong>
+            <p>{receita.atencao}</p>
+          </div>
+        )}
+
+        {receita.conservacao && (
+          <div className="dica conservacao">
+            <strong>
+              {ICONES.conservacao} Conservação
+            </strong>
+            <p>{receita.conservacao}</p>
           </div>
         )}
       </div>
@@ -253,8 +355,96 @@ function Receita({ receita, voltar }) {
   )
 }
 
+const formatarTempo = (s) => {
+  if (!Number.isFinite(s)) return '0:00'
+  const m = Math.floor(s / 60)
+  const seg = Math.floor(s % 60)
+  return `${m}:${String(seg).padStart(2, '0')}`
+}
+
+function Episodio({ episodio, ativo, aoTocar }) {
+  const audioRef = useRef(null)
+  const [tocando, setTocando] = useState(false)
+  const [tempo, setTempo] = useState(0)
+  const [duracao, setDuracao] = useState(0)
+
+  // Pausa este episódio quando outro começa a tocar.
+  if (!ativo && tocando) {
+    audioRef.current?.pause()
+  }
+
+  const alternar = () => {
+    const audio = audioRef.current
+    if (!audio) return
+    if (audio.paused) {
+      aoTocar()
+      audio.play()
+    } else {
+      audio.pause()
+    }
+  }
+
+  const buscar = (e) => {
+    const audio = audioRef.current
+    if (!audio || !duracao) return
+    const { left, width } = e.currentTarget.getBoundingClientRect()
+    audio.currentTime = ((e.clientX - left) / width) * duracao
+  }
+
+  const semAudio = !episodio.audio
+  const progresso = duracao ? (tempo / duracao) * 100 : 0
+
+  return (
+    <article className="card-episodio">
+      <button
+        className={`play ${tocando ? 'ativo' : ''}`}
+        onClick={alternar}
+        disabled={semAudio}
+        aria-label={tocando ? 'Pausar' : 'Tocar'}
+      >
+        {tocando ? (
+          <Icone>
+            <path d="M8 5v14" />
+            <path d="M16 5v14" />
+          </Icone>
+        ) : (
+          <Icone>
+            <path d="M7 4.5v15l12-7.5z" />
+          </Icone>
+        )}
+      </button>
+      <div className="episodio-info">
+        <strong>{episodio.titulo}</strong>
+        <p>{episodio.descricao}</p>
+        {semAudio ? (
+          <small className="aviso">Áudio em breve · {episodio.duracao}</small>
+        ) : (
+          <>
+            <div className="barra" onClick={buscar} role="progressbar" aria-valuenow={progresso}>
+              <div className="barra-preenchida" style={{ width: `${progresso}%` }} />
+            </div>
+            <small>
+              {formatarTempo(tempo)} / {formatarTempo(duracao || 0)}
+            </small>
+            <audio
+              ref={audioRef}
+              src={episodio.audio}
+              preload="metadata"
+              onPlay={() => setTocando(true)}
+              onPause={() => setTocando(false)}
+              onEnded={() => setTocando(false)}
+              onTimeUpdate={(e) => setTempo(e.currentTarget.currentTime)}
+              onLoadedMetadata={(e) => setDuracao(e.currentTarget.duration)}
+            />
+          </>
+        )}
+      </div>
+    </article>
+  )
+}
+
 function Podcasts() {
-  const [tocando, setTocando] = useState(null)
+  const [ativo, setAtivo] = useState(null)
   return (
     <div className="tela">
       <header className="cabecalho">
@@ -263,36 +453,14 @@ function Podcasts() {
       </header>
       <div className="lista">
         {podcasts.map((p) => (
-          <article className="card-episodio" key={p.id}>
-            <button
-              className={`play ${tocando === p.id ? 'ativo' : ''}`}
-              onClick={() => setTocando(tocando === p.id ? null : p.id)}
-              aria-label={tocando === p.id ? 'Pausar' : 'Tocar'}
-            >
-              {tocando === p.id ? '❚❚' : '▶'}
-            </button>
-            <div>
-              <strong>{p.titulo}</strong>
-              <p>{p.descricao}</p>
-              <small>{p.duracao}</small>
-              {tocando === p.id && (
-                <div className="player">
-                  {p.audio ? (
-                    <audio src={p.audio} controls autoPlay />
-                  ) : (
-                    <small className="aviso">Áudio em breve.</small>
-                  )}
-                </div>
-              )}
-            </div>
-          </article>
+          <Episodio key={p.id} episodio={p} ativo={ativo === p.id} aoTocar={() => setAtivo(p.id)} />
         ))}
       </div>
     </div>
   )
 }
 
-function Guia() {
+function Guia({ abrirReceita }) {
   const [aba, setAba] = useState('recheios')
   const itens = guia[aba]
   return (
@@ -309,15 +477,23 @@ function Guia() {
         </div>
       </header>
       <div className="lista">
-        {itens.map((g) => (
-          <article className="card-lista" key={g.id}>
-            <CardImagem item={g} className="thumb" />
-            <div>
-              <strong>{g.nome}</strong>
-              <p>{g.descricao}</p>
-            </div>
-          </article>
-        ))}
+        {itens.map((g) => {
+          const temDetalhe = Boolean(g.passos || g.preparos)
+          return (
+            <article
+              className={`card-lista ${temDetalhe ? '' : 'sem-detalhe'}`}
+              key={g.id}
+              onClick={temDetalhe ? () => abrirReceita(g) : undefined}
+            >
+              <CardImagem item={g} className="thumb" />
+              <div>
+                <strong>{g.nome}</strong>
+                <p>{g.descricao}</p>
+                {temDetalhe && <small>Ver receita ›</small>}
+              </div>
+            </article>
+          )
+        })}
       </div>
     </div>
   )
@@ -347,7 +523,7 @@ function App() {
   } else if (aba === 'podcasts') {
     tela = <Podcasts />
   } else {
-    tela = <Guia />
+    tela = <Guia abrirReceita={abrirReceita} />
   }
 
   return (
