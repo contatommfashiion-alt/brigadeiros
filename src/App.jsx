@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { receitas, guia, podcasts } from './dados.js'
 import './App.css'
 
@@ -144,6 +144,7 @@ function Inicio({ irPara, abrirReceita }) {
   return (
     <div className="tela">
       <section className="hero">
+        <img className="hero-logo" src={CAPA_PODCAST} alt="" />
         <div className="hero-texto">
           <h1>Brigadeiros Gourmet</h1>
           <p>Descubra receitas, recheios e coberturas para encantar.</p>
@@ -260,6 +261,10 @@ function Receita({ receita, voltar }) {
           {receita.dificuldade && <span>📊 {receita.dificuldade}</span>}
         </div>
 
+        {receita.fotoReceita && (
+          <img className="foto-receita" src={receita.fotoReceita} alt={receita.nome} />
+        )}
+
         <h2>Ingredientes</h2>
         <ul className="ingredientes">
           {receita.ingredientes.map((ing, i) => (
@@ -362,99 +367,215 @@ const formatarTempo = (s) => {
   return `${m}:${String(seg).padStart(2, '0')}`
 }
 
-function Episodio({ episodio, ativo, aoTocar }) {
-  const audioRef = useRef(null)
-  const [tocando, setTocando] = useState(false)
-  const [tempo, setTempo] = useState(0)
-  const [duracao, setDuracao] = useState(0)
+const CAPA_PODCAST = '/briga.webp'
 
-  // Pausa este episódio quando outro começa a tocar.
-  if (!ativo && tocando) {
-    audioRef.current?.pause()
-  }
+const ICONE_X = (
+  <Icone>
+    <path d="M6 6l12 12" />
+    <path d="M18 6 6 18" />
+  </Icone>
+)
 
-  const alternar = () => {
-    const audio = audioRef.current
-    if (!audio) return
-    if (audio.paused) {
-      aoTocar()
-      audio.play()
-    } else {
-      audio.pause()
-    }
-  }
-
-  const buscar = (e) => {
-    const audio = audioRef.current
-    if (!audio || !duracao) return
-    const { left, width } = e.currentTarget.getBoundingClientRect()
-    audio.currentTime = ((e.clientX - left) / width) * duracao
-  }
-
-  const semAudio = !episodio.audio
+// Barra de progresso clicável/arrastável, usada no mini player e no player cheio.
+function Barra({ tempo, duracao, aoBuscar, className = '' }) {
   const progresso = duracao ? (tempo / duracao) * 100 : 0
-
+  const buscar = (e) => {
+    if (!duracao) return
+    const { left, width } = e.currentTarget.getBoundingClientRect()
+    aoBuscar(Math.min(Math.max((e.clientX - left) / width, 0), 1) * duracao)
+  }
   return (
-    <article className="card-episodio">
-      <button
-        className={`play ${tocando ? 'ativo' : ''}`}
-        onClick={alternar}
-        disabled={semAudio}
-        aria-label={tocando ? 'Pausar' : 'Tocar'}
-      >
-        {tocando ? (
-          <Icone>
-            <path d="M8 5v14" />
-            <path d="M16 5v14" />
-          </Icone>
-        ) : (
-          <Icone>
-            <path d="M7 4.5v15l12-7.5z" />
-          </Icone>
-        )}
-      </button>
-      <div className="episodio-info">
-        <strong>{episodio.titulo}</strong>
-        <p>{episodio.descricao}</p>
-        {semAudio ? (
-          <small className="aviso">Áudio em breve · {episodio.duracao}</small>
-        ) : (
-          <>
-            <div className="barra" onClick={buscar} role="progressbar" aria-valuenow={progresso}>
-              <div className="barra-preenchida" style={{ width: `${progresso}%` }} />
-            </div>
-            <small>
-              {formatarTempo(tempo)} / {formatarTempo(duracao || 0)}
-            </small>
-            <audio
-              ref={audioRef}
-              src={episodio.audio}
-              preload="metadata"
-              onPlay={() => setTocando(true)}
-              onPause={() => setTocando(false)}
-              onEnded={() => setTocando(false)}
-              onTimeUpdate={(e) => setTempo(e.currentTarget.currentTime)}
-              onLoadedMetadata={(e) => setDuracao(e.currentTarget.duration)}
-            />
-          </>
-        )}
+    <div
+      className={`barra ${className}`}
+      onClick={buscar}
+      role="progressbar"
+      aria-valuenow={Math.round(progresso)}
+    >
+      <div className="barra-preenchida" style={{ width: `${progresso}%` }}>
+        <span className="bolinha" />
       </div>
-    </article>
+    </div>
   )
 }
 
-function Podcasts() {
-  const [ativo, setAtivo] = useState(null)
+function Podcasts({ player }) {
+  const { episodio: atual, tocando, tocar, alternar } = player
   return (
     <div className="tela">
-      <header className="cabecalho">
-        <h1>Podcasts</h1>
-        <p>Ouça enquanto prepara seus doces.</p>
+      <header className="cabecalho playlist">
+        <img className="playlist-capa" src={CAPA_PODCAST} alt="" />
+        <div>
+          <small className="playlist-tipo">Playlist</small>
+          <h1>Podcasts</h1>
+          <p>
+            Brigadeiros Gourmet · {podcasts.length} episódios
+          </p>
+        </div>
       </header>
-      <div className="lista">
-        {podcasts.map((p) => (
-          <Episodio key={p.id} episodio={p} ativo={ativo === p.id} aoTocar={() => setAtivo(p.id)} />
-        ))}
+
+      <div className="playlist-acoes">
+        <button
+          className="botao-tocar-tudo"
+          onClick={() => (atual ? alternar() : tocar(0))}
+          aria-label={tocando ? 'Pausar' : 'Tocar'}
+        >
+          {tocando ? (
+            <Icone>
+              <path d="M8 5v14" />
+              <path d="M16 5v14" />
+            </Icone>
+          ) : (
+            <Icone>
+              <path d="M7 4.5v15l12-7.5z" />
+            </Icone>
+          )}
+          {tocando ? 'Pausar' : 'Tocar tudo'}
+        </button>
+      </div>
+
+      <ol className="faixas">
+        {podcasts.map((p, i) => {
+          const ativo = atual?.id === p.id
+          return (
+            <li
+              key={p.id}
+              className={`faixa ${ativo ? 'ativa' : ''} ${p.audio ? '' : 'sem-audio'}`}
+              onClick={() => p.audio && (ativo ? alternar() : tocar(i))}
+            >
+              <span className="faixa-num">
+                {ativo && tocando ? <span className="equalizador" aria-hidden="true" /> : i + 1}
+              </span>
+              <div className="faixa-info">
+                <strong>{p.titulo}</strong>
+                <p>{p.descricao}</p>
+              </div>
+              <small>{p.audio ? p.duracao : 'em breve'}</small>
+            </li>
+          )
+        })}
+      </ol>
+    </div>
+  )
+}
+
+function MiniPlayer({ player, aoExpandir }) {
+  const { episodio, tocando, tempo, duracao, alternar, buscar, fechar } = player
+  if (!episodio) return null
+  return (
+    <div className="mini-player" onClick={aoExpandir}>
+      <Barra tempo={tempo} duracao={duracao} aoBuscar={buscar} className="fina" />
+      <div className="mini-player-linha">
+        <img src={CAPA_PODCAST} alt="" />
+        <div className="mini-player-info">
+          <strong>{episodio.titulo}</strong>
+          <small>Brigadeiros Gourmet</small>
+        </div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            alternar()
+          }}
+          aria-label={tocando ? 'Pausar' : 'Tocar'}
+        >
+          {tocando ? (
+            <Icone>
+              <path d="M8 5v14" />
+              <path d="M16 5v14" />
+            </Icone>
+          ) : (
+            <Icone>
+              <path d="M7 4.5v15l12-7.5z" />
+            </Icone>
+          )}
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            fechar()
+          }}
+          aria-label="Fechar player"
+        >
+          {ICONE_X}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function PlayerCheio({ player, aoFechar }) {
+  const { episodio, tocando, tempo, duracao, alternar, buscar, pular, fechar, anterior, proximo } =
+    player
+  if (!episodio) return null
+  return (
+    <div className="player-cheio">
+      <header>
+        <button onClick={aoFechar} aria-label="Minimizar">
+          <Icone>
+            <path d="m6 9 6 6 6-6" />
+          </Icone>
+        </button>
+        <small>Tocando da playlist Podcasts</small>
+        <button
+          onClick={() => {
+            fechar()
+            aoFechar()
+          }}
+          aria-label="Fechar player"
+        >
+          {ICONE_X}
+        </button>
+      </header>
+
+      <img className="player-capa" src={CAPA_PODCAST} alt="" />
+
+      <div className="player-texto">
+        <h2>{episodio.titulo}</h2>
+        <p>{episodio.descricao}</p>
+      </div>
+
+      <Barra tempo={tempo} duracao={duracao} aoBuscar={buscar} />
+      <div className="player-tempos">
+        <small>{formatarTempo(tempo)}</small>
+        <small>{formatarTempo(duracao)}</small>
+      </div>
+
+      <div className="player-controles">
+        <button onClick={anterior} aria-label="Anterior">
+          <Icone>
+            <path d="M18 6 8 12l10 6z" />
+            <path d="M6 5.5v13" />
+          </Icone>
+        </button>
+        <button onClick={() => pular(-15)} aria-label="Voltar 15 segundos">
+          <Icone>
+            <path d="M11 4 4.5 8.5 11 13" />
+            <path d="M4.5 8.5H14a5.5 5.5 0 0 1 0 11H8" />
+          </Icone>
+        </button>
+        <button className="principal" onClick={alternar} aria-label={tocando ? 'Pausar' : 'Tocar'}>
+          {tocando ? (
+            <Icone>
+              <path d="M8 5v14" />
+              <path d="M16 5v14" />
+            </Icone>
+          ) : (
+            <Icone>
+              <path d="M7 4.5v15l12-7.5z" />
+            </Icone>
+          )}
+        </button>
+        <button onClick={() => pular(15)} aria-label="Avançar 15 segundos">
+          <Icone>
+            <path d="m13 4 6.5 4.5L13 13" />
+            <path d="M19.5 8.5H10a5.5 5.5 0 0 0 0 11h6" />
+          </Icone>
+        </button>
+        <button onClick={proximo} aria-label="Próximo">
+          <Icone>
+            <path d="M6 6l10 6L6 18z" />
+            <path d="M18 5.5v13" />
+          </Icone>
+        </button>
       </div>
     </div>
   )
@@ -499,9 +620,105 @@ function Guia({ abrirReceita }) {
   )
 }
 
+// Um único áudio para todo o app, para a faixa seguir tocando ao trocar de aba.
+function usePlayer() {
+  const audioRef = useRef(null)
+  const [indice, setIndice] = useState(null)
+  const [tocando, setTocando] = useState(false)
+  const [tempo, setTempo] = useState(0)
+  const [duracao, setDuracao] = useState(0)
+
+  const comAudio = podcasts.filter((p) => p.audio)
+  const episodio = indice === null ? null : podcasts[indice]
+
+  // Ao trocar de faixa, espera o novo src entrar no DOM para dar play.
+  useEffect(() => {
+    if (indice !== null) audioRef.current?.play()
+  }, [indice])
+
+  const tocar = (i) => {
+    if (i === indice) return audioRef.current?.play()
+    setTempo(0)
+    setDuracao(0)
+    setIndice(i)
+  }
+
+  const alternar = () => {
+    const audio = audioRef.current
+    if (!audio) return
+    audio.paused ? audio.play() : audio.pause()
+  }
+
+  const buscar = (segundos) => {
+    if (audioRef.current) audioRef.current.currentTime = segundos
+  }
+
+  const pular = (segundos) => {
+    const audio = audioRef.current
+    if (!audio) return
+    audio.currentTime = Math.min(Math.max(audio.currentTime + segundos, 0), duracao || 0)
+  }
+
+  // Fecha o player e para o áudio.
+  const fechar = () => {
+    audioRef.current?.pause()
+    setIndice(null)
+    setTocando(false)
+    setTempo(0)
+    setDuracao(0)
+  }
+
+  // Anda pela lista pulando episódios sem áudio.
+  const mover = (passo) => {
+    if (indice === null) return false
+    for (let i = indice + passo; i >= 0 && i < podcasts.length; i += passo) {
+      if (podcasts[i].audio) {
+        tocar(i)
+        return true
+      }
+    }
+    return false
+  }
+
+  const player = {
+    episodio,
+    tocando,
+    tempo,
+    duracao,
+    tocar,
+    alternar,
+    buscar,
+    pular,
+    fechar,
+    anterior: () => mover(-1),
+    proximo: () => mover(1),
+    temAudio: comAudio.length > 0,
+  }
+
+  const elemento = episodio?.audio ? (
+    <audio
+      ref={audioRef}
+      src={episodio.audio}
+      preload="metadata"
+      onPlay={() => setTocando(true)}
+      onPause={() => setTocando(false)}
+      onEnded={() => {
+        // Toca o próximo; se era o último, fecha o player.
+        if (!mover(1)) fechar()
+      }}
+      onTimeUpdate={(e) => setTempo(e.currentTarget.currentTime)}
+      onLoadedMetadata={(e) => setDuracao(e.currentTarget.duration)}
+    />
+  ) : null
+
+  return [player, elemento]
+}
+
 function App() {
   const [aba, setAba] = useState('inicio')
   const [receitaAberta, setReceitaAberta] = useState(null)
+  const [playerAberto, setPlayerAberto] = useState(false)
+  const [player, audioElemento] = usePlayer()
 
   const irPara = (id) => {
     setReceitaAberta(null)
@@ -521,14 +738,17 @@ function App() {
   } else if (aba === 'receitas') {
     tela = <Receitas abrirReceita={abrirReceita} />
   } else if (aba === 'podcasts') {
-    tela = <Podcasts />
+    tela = <Podcasts player={player} />
   } else {
     tela = <Guia abrirReceita={abrirReceita} />
   }
 
   return (
-    <div className="app">
+    <div className={`app ${player.episodio ? 'com-player' : ''}`}>
       {tela}
+      {audioElemento}
+      {playerAberto && <PlayerCheio player={player} aoFechar={() => setPlayerAberto(false)} />}
+      <MiniPlayer player={player} aoExpandir={() => setPlayerAberto(true)} />
       <nav className="rodape">
         {ABAS.map((a) => (
           <button

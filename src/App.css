@@ -55,11 +55,23 @@
 
 /* ---------- Início: destaque ---------- */
 .hero {
-  padding: 40px 16px 12px;
+  padding: 32px 16px 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hero-logo {
+  order: 2;
+  width: 130px;
+  height: 130px;
+  border-radius: 24px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
 .hero h1 {
-  margin: 0 0 10px;
-  font-size: 2.3rem;
+  margin: 0 0 8px;
+  font-size: 1.7rem;
   line-height: 1.1;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -70,11 +82,10 @@
   color: transparent;
 }
 .hero p {
-  margin: 0 0 20px;
+  margin: 0 0 14px;
   color: var(--texto);
-  font-size: 1.05rem;
-  line-height: 1.5;
-  max-width: 320px;
+  font-size: 0.92rem;
+  line-height: 1.45;
 }
 .botao-destaque {
   display: inline-flex;
@@ -84,8 +95,8 @@
   color: var(--texto);
   border: 1px solid var(--texto-suave);
   border-radius: 999px;
-  padding: 10px 18px;
-  font-size: 0.95rem;
+  padding: 8px 16px;
+  font-size: 0.88rem;
   font-weight: 500;
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
@@ -352,6 +363,12 @@
   margin: 24px 0 10px;
   color: var(--rosa);
 }
+.foto-receita {
+  display: block;
+  width: 100%;
+  border-radius: 16px;
+  margin-top: 20px;
+}
 .conteudo h3 {
   font-size: 0.95rem;
   margin: 14px 0 6px;
@@ -470,75 +487,349 @@
   color: var(--rosa);
 }
 
-/* ---------- Podcasts ---------- */
-.card-episodio {
+/* ---------- Podcasts: playlist ---------- */
+.cabecalho.playlist {
   display: flex;
-  gap: 14px;
-  background: var(--card);
-  border: 1px solid var(--borda);
-  border-radius: var(--raio);
-  padding: 14px;
+  gap: 16px;
+  align-items: flex-end;
+  padding-top: 28px;
 }
-.card-episodio .play {
+.playlist-capa {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--texto-suave);
-  background: transparent;
-  color: var(--texto);
-  cursor: pointer;
-  display: flex;
+}
+.playlist-tipo {
+  color: var(--texto-suave);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.cabecalho.playlist h1 {
+  margin: 4px 0 6px;
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+.cabecalho.playlist p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+}
+
+.playlist-acoes {
+  padding: 4px 16px 16px;
+}
+.botao-tocar-tudo {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--texto-suave);
+  border-radius: 999px;
+  padding: 10px 20px;
+  color: var(--texto);
+  font-size: 0.95rem;
+  cursor: pointer;
 }
-.card-episodio .play svg {
-  width: 20px;
-  height: 20px;
+.botao-tocar-tudo svg {
+  width: 18px;
+  height: 18px;
 }
-.card-episodio .play:hover:not(:disabled) {
+.botao-tocar-tudo:hover {
   border-color: var(--texto);
   background: rgba(255, 255, 255, 0.05);
 }
-.card-episodio .play.ativo {
-  border-color: var(--texto);
+
+.faixas {
+  list-style: none;
+  margin: 0;
+  padding: 0 8px;
 }
-.card-episodio .play:disabled {
-  opacity: 0.4;
+.faixa {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.faixa:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+.faixa.sem-audio {
+  opacity: 0.45;
   cursor: default;
 }
-.episodio-info {
+.faixa-num {
+  width: 22px;
+  flex-shrink: 0;
+  text-align: center;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+}
+.faixa.ativa .faixa-num,
+.faixa.ativa .faixa-info strong {
+  color: var(--rosa);
+}
+.faixa-info {
   flex: 1;
   min-width: 0;
 }
-.card-episodio strong {
+.faixa-info strong {
   display: block;
-  margin-bottom: 4px;
+  font-weight: 500;
+  margin-bottom: 2px;
 }
-.card-episodio p {
-  margin: 0 0 8px;
+.faixa-info p {
+  margin: 0;
+  font-size: 0.82rem;
   color: var(--texto-suave);
-  font-size: 0.88rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.card-episodio small {
-  color: var(--amarelo);
+.faixa > small {
+  color: var(--texto-suave);
   font-size: 0.78rem;
+  flex-shrink: 0;
 }
+
+/* Barrinhas animadas na faixa que está tocando */
+.equalizador,
+.equalizador::before,
+.equalizador::after {
+  display: inline-block;
+  width: 2px;
+  height: 10px;
+  background: var(--rosa);
+  animation: pular 0.9s ease-in-out infinite;
+}
+.equalizador {
+  position: relative;
+}
+.equalizador::before,
+.equalizador::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+}
+.equalizador::before {
+  left: -4px;
+  animation-delay: 0.3s;
+}
+.equalizador::after {
+  left: 4px;
+  animation-delay: 0.6s;
+}
+@keyframes pular {
+  0%,
+  100% {
+    height: 4px;
+  }
+  50% {
+    height: 12px;
+  }
+}
+
+/* ---------- Barra de progresso ---------- */
 .barra {
   height: 4px;
   background: var(--borda);
   border-radius: 999px;
-  margin: 6px 0 6px;
   cursor: pointer;
-  overflow: hidden;
+}
+.barra.fina {
+  height: 2px;
+  border-radius: 0;
+  background: transparent;
 }
 .barra-preenchida {
+  position: relative;
   height: 100%;
   background: linear-gradient(90deg, var(--rosa), var(--amarelo));
   border-radius: 999px;
   transition: width 0.2s linear;
 }
+.barra .bolinha {
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--texto);
+}
+.barra.fina .bolinha {
+  display: none;
+}
+
+/* ---------- Mini player ---------- */
+.mini-player {
+  position: fixed;
+  bottom: calc(60px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: var(--card);
+  border-top: 1px solid var(--borda);
+  cursor: pointer;
+  z-index: 11;
+}
+.mini-player-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+}
+.mini-player img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.mini-player-info {
+  flex: 1;
+  min-width: 0;
+}
+.mini-player-info strong {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mini-player-info small {
+  color: var(--texto-suave);
+  font-size: 0.75rem;
+}
+.mini-player button {
+  border: none;
+  background: none;
+  color: var(--texto);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  flex-shrink: 0;
+}
+.mini-player button:last-child {
+  color: var(--texto-suave);
+}
+.mini-player button:last-child:hover {
+  color: var(--texto);
+}
+
+/* Espaço extra no fim da tela quando o mini player está visível */
+.app.com-player .tela {
+  padding-bottom: 160px;
+}
+
+/* ---------- Player em tela cheia ---------- */
+.player-cheio {
+  position: fixed;
+  inset: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: linear-gradient(180deg, #3a2018 0%, var(--fundo) 55%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px calc(32px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+}
+.player-cheio header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.player-cheio header small {
+  color: var(--texto-suave);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.player-cheio header button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  color: var(--texto);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.player-capa {
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 16px;
+  margin: 0 auto 28px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+}
+.player-texto h2 {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
+}
+.player-texto p {
+  margin: 0 0 24px;
+  color: var(--texto-suave);
+  font-size: 0.88rem;
+}
+.player-tempos {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.player-tempos small {
+  color: var(--texto-suave);
+  font-size: 0.72rem;
+}
+.player-controles {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 24px;
+}
+.player-controles button {
+  border: none;
+  background: none;
+  color: var(--texto-suave);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+}
+.player-controles button:hover {
+  color: var(--texto);
+}
+.player-controles .principal {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1px solid var(--texto-suave);
+  color: var(--texto);
+  align-items: center;
+  justify-content: center;
+}
+.player-controles .principal svg {
+  width: 26px;
+  height: 26px;
+}
+.player-controles .principal:hover {
+  border-color: var(--texto);
+  background: rgba(255, 255, 255, 0.05);
+}
+
 .aviso {
   color: var(--texto-suave) !important;
   font-style: italic;
