@@ -5,10 +5,10 @@
   --borda: #4a3128;
   --texto: #fff4ec;
   --texto-suave: #c9ae9e;
-  --rosa: #ff6fa5;
-  --rosa-escuro: #c9184a;
-  --roxo: #7b2cbf;
-  --amarelo: #ffd166;
+  /* tons da logo */
+  --lilas: #b98cf0;
+  --lilas-forte: #9a5fe0;
+  --azul-claro: #bfe8f7;
   --raio: 18px;
 
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;

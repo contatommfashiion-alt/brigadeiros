@@ -144,7 +144,7 @@ function Inicio({ irPara, abrirReceita }) {
   return (
     <div className="tela">
       <section className="hero">
-        <img className="hero-logo" src={CAPA_PODCAST} alt="" />
+        <img className="hero-logo" src="/iniciar.webp" alt="" />
         <div className="hero-texto">
           <h1>Brigadeiros Gourmet</h1>
           <p>Descubra receitas, recheios e coberturas para encantar.</p>
@@ -367,7 +367,7 @@ const formatarTempo = (s) => {
   return `${m}:${String(seg).padStart(2, '0')}`
 }
 
-const CAPA_PODCAST = '/briga.webp'
+const CAPA_PODCAST = '/iniciar.webp'
 
 const ICONE_X = (
   <Icone>

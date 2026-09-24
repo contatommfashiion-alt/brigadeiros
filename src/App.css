@@ -1,4 +1,4 @@
-/* Layout geral: largura de celular, centralizado no desktop */
+﻿/* Layout geral: largura de celular, centralizado no desktop */
 .app {
   max-width: 480px;
   margin: 0 auto;
@@ -76,7 +76,7 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 800;
-  background: linear-gradient(90deg, var(--rosa), var(--amarelo));
+  background: linear-gradient(90deg, var(--lilas-forte), var(--azul-claro));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -129,7 +129,7 @@
 .link {
   background: none;
   border: none;
-  color: var(--rosa);
+  color: var(--lilas);
   font-size: 0.85rem;
   cursor: pointer;
   padding: 0;
@@ -177,8 +177,8 @@
   padding: 0 0 2px;
 }
 .seta:hover {
-  background: var(--rosa);
-  border-color: var(--rosa);
+  background: var(--lilas);
+  border-color: var(--lilas);
   color: #fff;
 }
 
@@ -253,7 +253,7 @@
   font-size: 0.88rem;
 }
 .card-lista small {
-  color: var(--amarelo);
+  color: var(--azul-claro);
 }
 .card-lista.sem-detalhe {
   cursor: default;
@@ -287,7 +287,7 @@
   font: inherit;
 }
 .cabecalho input:focus {
-  outline: 2px solid var(--rosa);
+  outline: 2px solid var(--lilas);
 }
 
 .segmentos {
@@ -306,7 +306,7 @@
   color: var(--texto-suave);
 }
 .segmentos button.ativo {
-  background: var(--rosa);
+  background: var(--lilas);
   color: #fff;
   font-weight: 700;
 }
@@ -327,7 +327,7 @@
   font-size: 0.95rem;
 }
 .card-grade small {
-  color: var(--amarelo);
+  color: var(--azul-claro);
   font-size: 0.78rem;
 }
 .vazio {
@@ -361,7 +361,7 @@
 .conteudo h2 {
   font-size: 1.1rem;
   margin: 24px 0 10px;
-  color: var(--rosa);
+  color: var(--lilas);
 }
 .foto-receita {
   display: block;
@@ -423,7 +423,7 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: var(--rosa);
+  background: var(--lilas);
   color: #fff;
   font-weight: 700;
   font-size: 0.85rem;
@@ -433,8 +433,8 @@
 }
 .dica {
   margin-top: 24px;
-  background: rgba(255, 209, 102, 0.12);
-  border: 1px solid rgba(255, 209, 102, 0.4);
+  background: rgba(191, 232, 247, 0.1);
+  border: 1px solid rgba(191, 232, 247, 0.35);
   border-radius: 14px;
   padding: 14px;
 }
@@ -442,7 +442,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--amarelo);
+  color: var(--azul-claro);
 }
 .dica strong svg {
   width: 18px;
@@ -480,11 +480,11 @@
 }
 .dica.conservacao {
   margin-top: 12px;
-  background: rgba(255, 111, 165, 0.1);
-  border-color: rgba(255, 111, 165, 0.4);
+  background: rgba(185, 140, 240, 0.12);
+  border-color: rgba(185, 140, 240, 0.4);
 }
 .dica.conservacao strong {
-  color: var(--rosa);
+  color: var(--lilas);
 }
 
 /* ---------- Podcasts: playlist ---------- */
@@ -572,7 +572,7 @@
 }
 .faixa.ativa .faixa-num,
 .faixa.ativa .faixa-info strong {
-  color: var(--rosa);
+  color: var(--lilas);
 }
 .faixa-info {
   flex: 1;
@@ -604,7 +604,7 @@
   display: inline-block;
   width: 2px;
   height: 10px;
-  background: var(--rosa);
+  background: var(--lilas);
   animation: pular 0.9s ease-in-out infinite;
 }
 .equalizador {
@@ -649,7 +649,7 @@
 .barra-preenchida {
   position: relative;
   height: 100%;
-  background: linear-gradient(90deg, var(--rosa), var(--amarelo));
+  background: linear-gradient(90deg, var(--lilas), var(--azul-claro));
   border-radius: 999px;
   transition: width 0.2s linear;
 }
